@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Page Layouts --- */
+        .page {
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .active { display: flex; }
+
+        /* --- Page 1: Greeting --- */
+        h1 { font-family: 'Playfair Display', serif; font-size: 4rem; margin-bottom: 10px; color: var(--gold); }
+        .date-text { font-size: 1.5rem; letter-spacing: 5px; margin-bottom: 30px; opacity: 0.8; }
+        
+        .premium-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px; /* Round Edges */
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .premium-btn:hover { background: var(--gold); color: var(--dark); box-shadow: 0 0 20px var(--gold); }
+
+        /* --- Emojis Falling --- */
+        .emoji {
+            position: fixed;
+            top: -50px;
+            font-size: 24px;
+            z-index: 1000;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* --- Page 2: Stats & Story --- */
+        #stats-container { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 50px; color: var(--gold); }
+        
+        .story-line {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 2s ease;
+            white-space: nowrap; /* Prevents word breaking */
+        }
+
+        /* --- Cake Styling --- */
+        .cake-container { margin-top: 100px; position: relative; cursor: pointer; }
+        .cake { width: 200px; height: 150px; background: #4d2a1a; border-radius: 10px; position: relative; box-shadow: 0 10px 0 #361d12; }
+        .cake::before { content: ''; position: absolute; width: 100%; height: 40px; background: #f0e68c; top: 30%; left: 0; }
+        
+        .candle { width: 10px; height: 40px; background: white; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); }
+        .flame {
+            width: 15px; height: 25px; background: orange; border-radius: 50%;
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            animation: flicker 0.1s infinite alternate;
+            box-shadow: 0 0 20px orange;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+        }
+
+        .blown-out { display: none; }
+
+        /* --- Page 3: Gifts --- */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin-top: 30px;
+        }
+
+        .gift-item {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+        }
+
+        .gift-item img, .gift-item video { width: 100%; height: 100%; object-fit: cover; }
+        .video-box { grid-column: span 2; justify-self: center; width: 50%; height: auto; }
+
+        .loved-msg { font-family: 'Playfair Display', serif; font-size: 3rem; margin-top: 50px; color: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <!-- Background Music (User must interact first for browsers to allow audio) -->
+    <audio id="bdayMusic" loop>
+        <source src="Saja_Boys_Ft_Andrew_Choi_neckwav_Danny_Chung_Kevin_Woo_SamUIL_KPop_Demon_Hunters_Cast_-_Soda_Pop_thinknews.com.ng.mp3" type="audio/mpeg"> <!-- FILE NAME TO EDIT -->
+    </audio>
+
+    <!-- PAGE 1 -->
+    <section id="page1" class="page active">
+        <p class="date-text">AUGUST 14, 2008</p>
+        <h1>Happy Birthday</h1>
+        <button class="premium-btn" onclick="startExperience()">Click Here</button>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section id="page2" class="page">
+        <div id="stats-container">Calculating your existence...</div>
+        
+        <div id="story-container">
+            <p class="story-line">A beautiful journey began...</p>
+            <p class="story-line">Full of laughter and dreams...</p>
+            <p class="story-line">Today, we celebrate you.</p>
+        </div>
+
+        <div class="cake-container" id="cakeSection" onclick="blowCandle()">
+            <div class="cake">
+                <div class="candle">
+                    <div class="flame" id="mainFlame"></div>
+                </div>
+            </div>
+            <p id="blowPrompt" style="margin-top: 20px; color: var(--gold);">Blow in 3... 2... 1...</p>
+        </div>
+    </section>
+
+    <!-- PAGE 3 -->
+    <section id="page3" class="page">
+        <h1>Your Gifts</h1>
+        <div class="gift-grid">
+            <!-- EDIT IMAGE FILE NAMES HERE -->
+            <div class="gift-item"><img src="Screenshot_2026-05-04-15-30-22-145.jpeg" alt="Memory 1"></div>
+            <div class="gift-item"><img src="Screenshot_2026-05-04-15-51-20-647.jpeg" alt="Memory 2"></div>
+            <div class="gift-item"><img src="Screenshot_2026-05-04-15-34-31-232.jpeg" alt="Memory 3"></div>
+            <div class="gift-item"><img src="Screenshot_2026-05-04-15-49-55-674.jpeg" alt="Memory 4"></div>
+            <div class="gift-item video-box">
+                <video id="giftVideo" controls>
+                    <source src="VID-20260328-WA0025.mp4" type="video/mp4"> <!-- VIDEO FILE NAME -->
+                </video>
+            </div>
+        </div>
+        <p class="loved-msg">You are loved 💖</p>
+    </section>
+
+    <script>
+        /* --- EDITABLE SECTION --- */
+        const BDAY_DATE = "August 14, 2008";
+        const EMOJIS = ['🎂', '✨', '🥳', '🎉', '🎊', '💖'];
+        /* ------------------------ */
+
+        const music = document.getElementById('bdayMusic');
+
+        function startExperience() {
+            document.getElementById('page1').classList.remove('active');
+            document.getElementById('page2').classList.add('active');
+            music.play();
+            startStats();
+            spawnEmojis();
+            animateStory();
+        }
+
+        function startStats() {
+            const birthDate = new Date(BDAY_DATE);
+            setInterval(() => {
+                const now = new Date();
+                const diff = now - birthDate;
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const months = Math.floor(days / 30.44);
+                const seconds = Math.floor(diff / 1000);
+
+                document.getElementById('stats-container').innerHTML = 
+                    `${days} Days | ${months} Months | ${seconds} Seconds Alive`;
+            }, 1000);
+        }
+
+        function spawnEmojis() {
+            setInterval(() => {
+                const e = document.createElement('div');
+                e.className = 'emoji';
+                e.innerText = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+                e.style.left = Math.random() * 100 + 'vw';
+                e.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(e);
+                setTimeout(() => e.remove(), 5000);
+            }, 300);
+        }
+
+        function animateStory() {
+            const lines = document.querySelectorAll('.story-line');
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.style.opacity = 1;
+                    // Auto-scroll logic
+                    window.scrollBy({ top: 150, behavior: 'smooth' });
+                }, index * 3000);
+            });
+        }
+
+        function blowCandle() {
+            document.getElementById('mainFlame').classList.add('blown-out');
+            document.getElementById('blowPrompt').innerText = "Make a wish!";
+            
+            setTimeout(() => {
+                document.getElementById('page2').classList.remove('active');
+                document.getElementById('page3').classList.add('active');
+                const video = document.getElementById('giftVideo');
+                video.play();
+                music.pause(); // Music plays with video or you can keep both
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
+```
